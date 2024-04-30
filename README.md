@@ -8,11 +8,26 @@ SwiftTickets是一个仿12306的高并发铁路票务系统。
 
 ## 二、项目使用的基本架构
 
-![image-20240430221730391](README.assets/image-20240430221730391.png)
+<img src="README.assets/image-20240430221730391.png" alt="image-20240430221730391" style="zoom:75%;" />
 
 ## 三、项目具体实现
 
 ### 前端 
+
+依赖 `nodejs`
+
+```shell
+npm init vite
+	->y
+	->[project_name]
+	->Vue
+	->JavaScript
+cd [project_name]
+npm install 
+npm run dev 
+```
+
+只要运行的话 `npm run dev` 就行了
 
 
 
