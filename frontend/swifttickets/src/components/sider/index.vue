@@ -57,8 +57,8 @@ const logout = () => {
           </template>
           <template #title>常用信息管理</template>
           <Item key="userInfo"
-            ><RouterLink to="/userInfo">个人信息</RouterLink></Item
-          >
+            ><RouterLink to="/userInfo">个人信息</RouterLink>
+          </Item>
           <Item key="passenger"
             ><RouterLink to="/passenger">乘车人</RouterLink></Item
           >

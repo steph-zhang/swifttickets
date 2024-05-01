@@ -725,7 +725,7 @@ const handleSubmitBuyTicket = () => {
     padding: 5px;
   }
 }
-::v-deep {
+:deep() {
   .ant-card-head {
     background-color: #1e71bd;
   }

@@ -1383,7 +1383,7 @@ const handleBook = (record) => {
   font-weight: bolder;
 }
 
-::v-deep {
+:deep() {
   .custom-select {
     .ant-select-item-option-active::before {
       content: '√';
@@ -1448,7 +1448,7 @@ const handleBook = (record) => {
     }
   }
 }
-::v-deep(.custome-table) {
+:deep(.custome-table) {
   .ant-table-thead > tr > th {
     color: #fff;
   }

@@ -433,11 +433,9 @@ const getOrderStatus = () => {
     }
   }
 }
-::v-deep {
-  .ant-table-thead {
-    .ant-table-cell {
-      background: #f6f6f6;
-    }
+:deep(.ant-table-thead){
+  .ant-table-cell {
+    background: #f6f6f6;
   }
 }
 </style>

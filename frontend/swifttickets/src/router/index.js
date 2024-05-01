@@ -5,6 +5,9 @@ import TicketSearch from '../views/ticketsearch/index.vue'
 import Userinfo from '../views/user-info/index.vue'
 import PersonalTicket from '../views/personalTicket/index.vue'
 import BuyTicket from '../views/buy-ticket/index.vue'
+import MyTicket from '../views/my-ticket/index.vue'
+import Order from '../views/order/index.vue'
+import CheckOrder from '../views/check-order/index.vue'
 
 import Cookies from 'js-cookie'
 const routes = [
@@ -57,6 +60,30 @@ const routes = [
     icon: 'icon-goumai',
     meta: { requiresAuth: true }
   },
+  {
+    label: '我的车票',
+    path: '/myTicket',
+    name: 'myTicket',
+    component: MyTicket,
+    icon: 'icon-dingdan',
+    meta: { requiresAuth: true }
+  },
+  {
+    label: '我的订单',
+    path: '/order',
+    name: 'order',
+    component: Order,
+    icon: 'icon-dingdan',
+    meta: { requiresAuth: true }
+  },
+  {
+    label: '结算',
+    path: '/checkOrder',
+    name: 'checkOrder',
+    component: CheckOrder,
+    icon: 'icon-goumai',
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = createRouter({
@@ -71,7 +98,7 @@ router.beforeEach(async (to, from) => {
   if (
     to.meta?.requiresAuth &&
     to.name !== 'login' &&
-    (!Cookies.get('username') || !Cookies.get('token'))
+    (!Cookies.get('phone') || !Cookies.get('token'))
   ) {
     message.error('用户未登录或已过期！')
     return {

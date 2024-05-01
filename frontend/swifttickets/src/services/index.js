@@ -3,7 +3,7 @@ import http from './axios'
 const fetchLogin = async (body) => {
   const { data } = await http({
     method: 'POST',
-    url: '/api/user-service/v1/login',
+    url: '/api/userlogin/login',
     data: body
   })
   http.defaults.headers.common['Authorization'] = data.data?.accessToken
@@ -117,10 +117,10 @@ const fetchStationAll = async () => {
   return data
 }
 
-const fechUserInfo = async (params) => {
+const fetchUserInfo = async (params) => {
   const { data } = await http({
     method: 'GET',
-    url: '/api/user-service/query',
+    url: '/api/userlogin/info',
     params
   })
   return data
@@ -188,6 +188,13 @@ const fetchRefundTicket = async (body) => {
   })
 }
 
+const fetchSendCode = async (phone) => {
+  const { data } = await http({
+    method: 'GET',
+    url: '/api/userlogin/sendcode?phone=' + phone,
+  })
+}
+
 export {
   fetchLogin,
   fetchRegister,
@@ -202,12 +209,13 @@ export {
   fetchOrderBySn,
   fetchPay,
   fetchStationAll,
-  fechUserInfo,
+  fetchUserInfo,
   fetchTrainStation,
   fetchTicketList,
   fetchOrderCancel,
   fetchOrderStatus,
   fetchUserUpdate,
   fetchMyTicket,
-  fetchRefundTicket
+  fetchRefundTicket,
+  fetchSendCode
 }

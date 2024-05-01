@@ -52,7 +52,7 @@
     <Header :class="{ isLogin }">
       <div class="header-wrapper">
         <div>
-          <div class="logo">SwiftTickets</div>
+          <div class="logo"><h1 style="color: white">SwiftTickets</h1></div>
         </div>
         <div>
           <ul class="nav-list-wrapper">

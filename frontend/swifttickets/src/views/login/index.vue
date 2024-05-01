@@ -10,15 +10,15 @@ import {
   Modal
 } from 'ant-design-vue'
 import { reactive, ref, unref } from 'vue'
-import { fetchLogin, fetchRegister } from '../../services'
+import { fetchLogin, fetchRegister, fetchSendCode } from '../../services'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 const useForm = Form.useForm
 
 const formState = reactive({
-  usernameOrMailOrPhone: 'admin',
-  password: 'admin123456',
+  phone: '17343478777',
+  password: '',
   code: ''
 })
 
@@ -44,8 +44,8 @@ const rulesRef = reactive({
 const { validate, validateInfos } = useForm(formState, rulesRef)
 
 const registerForm = reactive({
-  username: 'admin',
-  password: 'admin123456',
+  username: '',
+  password: '',
   realName: '',
   idType: 0,
   idCard: '',
@@ -105,23 +105,31 @@ let currentAction = ref('login')
 
 const router = useRouter()
 
-const handleFinish = () => {
-  if (location.host.indexOf('12306') !== -1) {
-    validate()
-      .then(() => {
-        state.open = true
-      })
-      .catch((err) => console.log(err))
-    return
-  }
+let usePasswd = ref(false)
+
+const sendCode = () => {
+  console.log("sendCode")
+  fetchSendCode(formState.phone)
+  .then((res) => {
+      if (!res) {
+        message.error(res.message)
+      }
+    })
+}
+
+
+const handleLogin = () => {
   validate().then(() => {
     fetchLogin({
       ...formState
     }).then((res) => {
+      console.log(res.data?.token)
+      console.log(res.data?.username)
+      console.log(res.data?.phone)
       if (res.success) {
-        Cookies.set('token', res.data?.accessToken)
+        Cookies.set('token', res.data?.token)
         Cookies.set('username', res.data?.username)
-        Cookies.set('userId', res.data?.userId)
+        Cookies.set('phone', res.data?.phone)
         router.push('/ticketSearch')
       } else {
         message.error(res.message)
@@ -130,40 +138,15 @@ const handleFinish = () => {
   })
 }
 
-const handleLogin = () => {
-  if (!formState.code) return message.error('请输入验证码')
-  validate()
-    .then(() => {
-      fetchLogin({
-        usernameOrMailOrPhone: formState.usernameOrMailOrPhone,
-        password: formState.code
-      }).then((res) => {
-        if (res.success) {
-          Cookies.set('token', res.data?.accessToken)
-          Cookies.set('userId', res.data?.userId)
-          Cookies.set('username', res.data?.username)
-          router.push('/ticketSearch')
-        } else {
-          message.error(res.message)
-        }
-      })
-    })
-    .catch((err) => console.log(err))
-}
 
 const registerSubmit = () => {
-  if (location.host.indexOf('12306') !== -1) {
-    message.info('关注公众获取验证码登录哦！')
-    currentAction.value = 'login'
-    return
-  }
   registerValidate()
     .then(() => {
       fetchRegister(registerForm).then((res) => {
         if (res.success) {
           message.success('注册成功')
           currentAction.value = 'login'
-          formState.usernameOrMailOrPhone = res.data?.username
+          formState.phone = res.data?.username
           formState.password = ''
         } else {
           message.error(res.message)
@@ -197,10 +180,10 @@ const registerSubmit = () => {
         <div class="login-show" v-if="currentAction === 'login'">
           <h1 class="title">登录</h1>
           <Form name="basic" autocomplete="off">
-            <FormItem v-bind="validateInfos.usernameOrMailOrPhone">
+            <FormItem v-bind="validateInfos.phone">
               <Input
                 size="large"
-                v-model:value="formState.usernameOrMailOrPhone"
+                v-model:value="formState.phone"
                 placeholder="用户名"
               >
                 <template #prefix
@@ -208,7 +191,7 @@ const registerSubmit = () => {
               ></Input>
             </FormItem>
 
-            <FormItem v-bind="validateInfos.password">
+            <FormItem v-if="usePasswd" v-bind="validateInfos.password">
               <InputPassword
                 size="large"
                 v-model:value="formState.password"
@@ -219,15 +202,35 @@ const registerSubmit = () => {
                 /></template>
               </InputPassword>
             </FormItem>
+            <FormItem v-else v-bind="validateInfos.code">
+              <Input
+                size="large"
+                style="width: 75%"
+                v-model:value="formState.code"
+                placeholder="验证码"
+              >
+                <template #prefix
+                  ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+                /></template>
+                
+              </Input>
+              <Button style="width: 25%" @click="sendCode" type="success" :disabled="disabled">发送</Button>
+            </FormItem>
             <FormItem>
               <div class="action-btn">
-                <a href="">忘记密码？</a>
+                <Button 
+                  type="primary"
+                  :style="{ backgroundColor: '#123456', border: 'none' }"
+                  @click="message.info('暂不支持使用密码登录')">
+                  <div v-show="usePasswd">使用验证码登录</div>
+                  <div v-show="!usePasswd">使用密码登录</div>
+                </Button>
                 <Button
                   type="primary"
                   :style="{ backgroundColor: '#202020', border: 'none' }"
-                  @click="handleFinish"
-                  >登录</Button
-                >
+                  @click="handleLogin">
+                  登录
+                </Button>
               </div>
             </FormItem>
           </Form>
@@ -301,34 +304,6 @@ const registerSubmit = () => {
       </div>
     </div>
   </div>
-  <Modal
-    :visible="state.open"
-    title="人机认证"
-    wrapClassName="code-modal"
-    width="450px"
-    @cancel="state.open = false"
-    @ok="handleLogin"
-    centered
-  >
-    <div class="wrapper">
-      <h1 class="tip-text">
-        {{
-          `扫码下方二维码，关注后回复：12306，获取拿个offer-12306在线购票系统人机验证码`
-        }}
-      </h1>
-      <img
-        src="https://images-machen.oss-cn-beijing.aliyuncs.com/1_990064918_171_86_3_722467528_78457b21279219802d38525d32a77f39.png"
-        alt="微信公众号"
-      />
-      <div class="code-input">
-        <label class="code-label">验证码</label>
-        <Input
-          v-model:value="formState.code"
-          :style="{ width: '300px' }"
-        ></Input>
-      </div>
-    </div>
-  </Modal>
 </template>
 
 <style lang="scss" scoped>
@@ -481,14 +456,12 @@ const registerSubmit = () => {
     }
   }
 }
-::v-deep {
-  .ant-modal-header {
-    background-color: #3b3b3b !important;
-  }
-  .ant-form-item-label {
-    label {
-      color: #202020;
-    }
+:deep(.ant-modal-header) {
+  background-color: #3b3b3b !important;
+}
+:deep(.ant-form-item-label) {
+  label {
+    color: #202020;
   }
 }
 </style>

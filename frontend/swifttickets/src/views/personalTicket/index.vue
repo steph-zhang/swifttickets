@@ -220,9 +220,7 @@ watch(
     }
   }
 }
-::v-deep {
-  .ant-divider-horizontal {
-    margin: 15px 0 0;
-  }
+:deep(.ant-divider-horizontal) {
+  margin: 15px 0 0;
 }
 </style>

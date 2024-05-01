@@ -10,6 +10,7 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN'
 import jsCookie from 'js-cookie'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import axios from './services/axios'
 
 
 dayjs.extend(duration)
@@ -88,9 +89,7 @@ watch(
   height: 100vh;
   margin: 0;
 }
-::v-deep {
-  .ant-layout-content {
-    transition: all 0.2s;
-  }
+:deep(.ant-layout-content){
+  transition: all 0.2s;
 }
 </style>
