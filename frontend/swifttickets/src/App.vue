@@ -29,12 +29,12 @@ onMounted(() => {
   })
 })
 
-// watch(
-//   () => location.pathname,
-//   (newValue) => {
-//     console.log('newValue:::', newValue)
-//   }
-// )
+watch(
+  () => location.pathname,
+  (newValue) => {
+    console.log('newValue:::', newValue)
+  }
+)
 
 watch(
   () => route.path,

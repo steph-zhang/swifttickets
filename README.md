@@ -12,9 +12,9 @@ SwiftTickets是一个仿12306的高并发铁路票务系统。
 
 ## 三、项目具体实现
 
-### 前端 
+### 前端页面 
 
-依赖 `nodejs`
+依赖 `nodejs`、`vite`
 
 ```shell
 npm init vite
@@ -28,6 +28,8 @@ npm run dev
 ```
 
 只要运行的话 `npm run dev` 就行了
+
+### 登录功能
 
 
 

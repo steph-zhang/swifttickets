@@ -23,11 +23,11 @@ import {
 import { RetweetOutlined, SwapRightOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 import { getWeekNumber, getTicketNumber } from '@/utils'
-// import {
-//   fetchTicketSearch,
-//   fetchStationAll,
-//   fetchTrainStation
-// } from '@/service/index'
+import {
+  fetchTicketSearch,
+  fetchStationAll,
+  fetchTrainStation
+} from '@/services/index'
 import { SEAT_CLASS_TYPE_LIST, TRAIN_BRAND_LIST, TRAIN_TAG } from '@/constants'
 
 const useForm = Form.useForm
@@ -855,7 +855,11 @@ const handleBook = (record) => {
                     </Col>
                     <Col
                       :span="4"
-                      
+                      style="
+                         {
+                          text-align: 'end';
+                        }
+                      "
                     >
                       <FormItem label="发车时间">
                         <Select

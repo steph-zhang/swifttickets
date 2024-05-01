@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { message } from 'ant-design-vue'
-
+import Login from '../views/login/index.vue'
 import TicketSearch from '../views/ticketsearch/index.vue'
+import Userinfo from '../views/user-info/index.vue'
+import PersonalTicket from '../views/personalTicket/index.vue'
+import BuyTicket from '../views/buy-ticket/index.vue'
+
 import Cookies from 'js-cookie'
 const routes = [
   {
@@ -22,7 +26,37 @@ const routes = [
     component: TicketSearch,
     icon: 'icon-chaxun',
     meta: { requiresAuth: false }
-  }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: { requiresAuth: false }
+  },
+  {
+    label: '用户信息',
+    path: '/userInfo',
+    name: 'userInfo',
+    component: Userinfo,
+    icon: 'icon-ic_account',
+    meta: { requiresAuth: true }
+  },
+  {
+    label: '本人车票',
+    path: '/personalTicket',
+    name: 'personalTicket',
+    component: PersonalTicket,
+    icon: 'icon-dingdan',
+    meta: { requiresAuth: false }
+  },
+  {
+    label: '购买车票',
+    path: '/buyTicket',
+    name: 'buyTicket',
+    component: BuyTicket,
+    icon: 'icon-goumai',
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = createRouter({
@@ -30,21 +64,21 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach(async (to, from) => {
-//   // console.log(Cookies.get('username'))
-//   // console.log(to, 'to')
-//   // console.log(from, 'from')
-//   if (
-//     to.meta?.requiresAuth &&
-//     to.name !== 'login' &&
-//     (!Cookies.get('username') || !Cookies.get('token'))
-//   ) {
-//     message.error('用户未登录或已过期！')
-//     return {
-//       name: 'login'
-//     }
-//   }
-// })
+router.beforeEach(async (to, from) => {
+  // console.log(Cookies.get('username'))
+  // console.log(to, 'to')
+  // console.log(from, 'from')
+  if (
+    to.meta?.requiresAuth &&
+    to.name !== 'login' &&
+    (!Cookies.get('username') || !Cookies.get('token'))
+  ) {
+    message.error('用户未登录或已过期！')
+    return {
+      name: 'login'
+    }
+  }
+})
 
 export { routes }
 
