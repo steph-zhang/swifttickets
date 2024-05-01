@@ -26,27 +26,16 @@ public class UserLoginController {
     }
     @PostMapping("/login")
     public Result login(@RequestBody LoginFormDTO loginForm, HttpSession session){
-        System.out.println(loginForm);
-/*
-        LoginRespDTO loginRespDTO = new LoginRespDTO();
-        loginRespDTO.setUsername("admin");
-        loginRespDTO.setPhone("12345678900");
-        loginRespDTO.setToken("234f2f");
-        return Result.ok(loginRespDTO);
-*/
         return userLoginService.login(loginForm, session);
     }
 
     @GetMapping("/info")
     public Result info(@RequestParam String phone, HttpSession session){
-        System.out.println(phone);
-/*
-        LoginRespDTO loginRespDTO = new LoginRespDTO();
-        loginRespDTO.setUsername("admin");
-        loginRespDTO.setPhone("12345678900");
-        loginRespDTO.setToken("234f2f");
-        return Result.ok(loginRespDTO);
-*/
         return userLoginService.info(phone, session);
+    }
+
+    @GetMapping("/logout")
+    public Result logout(@RequestParam String token, HttpSession session){
+        return userLoginService.logout(token, session);
     }
 }

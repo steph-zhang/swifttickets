@@ -71,11 +71,10 @@ const fetchEditPassenger = async (body) => {
   })
   return data
 }
-const fetchLogout = async (body) => {
+const fetchLogout = async (token) => {
   const { data } = await http({
     method: 'GET',
-    url: '/api/user-service/logout',
-    data: body
+    url: '/api/userlogin/logout?token=' + token,
   })
   http.defaults.headers.common['Authorization'] = null
   return data
@@ -153,15 +152,6 @@ const fetchOrderCancel = async (body) => {
   return data
 }
 
-const fetchUserUpdate = async (body) => {
-  const { data } = await http({
-    method: 'POST',
-    url: '/api/user-service/update',
-    data: body
-  })
-  return data
-}
-
 const fetchOrderStatus = async (params) => {
   const { data } = await http({
     method: 'GET',
@@ -214,7 +204,6 @@ export {
   fetchTicketList,
   fetchOrderCancel,
   fetchOrderStatus,
-  fetchUserUpdate,
   fetchMyTicket,
   fetchRefundTicket,
   fetchSendCode

@@ -32,6 +32,7 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
     @Override
     public Result login(LoginFormDTO loginForm, HttpSession session) {
         String phone = loginForm.getPhone();
+        System.out.println(phone+"login");
         if(RegexUtils.isPhoneInvalid(phone)){
             return Result.fail("手机号格式错误");
         }
@@ -81,6 +82,12 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
     public Result info(String phone, HttpSession session) {
         User user = query().eq("phone", phone).one();
         return Result.ok(user);
+    }
+
+    @Override
+    public Result logout(String token, HttpSession session) {
+        System.out.println(token);
+        return Result.ok();
     }
 
     private User createUserWithPhone(String phone) {

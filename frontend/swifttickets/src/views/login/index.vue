@@ -18,7 +18,6 @@ const useForm = Form.useForm
 
 const formState = reactive({
   phone: '17343478777',
-  password: '',
   code: ''
 })
 
@@ -119,22 +118,24 @@ const sendCode = () => {
 
 
 const handleLogin = () => {
-  validate().then(() => {
-    fetchLogin({
-      ...formState
-    }).then((res) => {
-      console.log(res.data?.token)
-      console.log(res.data?.username)
-      console.log(res.data?.phone)
-      if (res.success) {
-        Cookies.set('token', res.data?.token)
-        Cookies.set('username', res.data?.username)
-        Cookies.set('phone', res.data?.phone)
-        router.push('/ticketSearch')
-      } else {
-        message.error(res.message)
-      }
-    })
+  if (!formState.code) return message.error('请输入验证码')
+  validate()
+    .then(() => {
+      fetchLogin({
+        ...formState
+      }).then((res) => {
+        console.log(res.data?.token)
+        console.log(res.data?.username)
+        console.log(res.data?.phone)
+        if (res.success) {
+          Cookies.set('token', res.data?.token)
+          Cookies.set('username', res.data?.username)
+          Cookies.set('phone', res.data?.phone)
+          router.push('/ticketSearch')
+        } else {
+          message.error(res.message)
+        }
+      })
   })
 }
 
@@ -147,7 +148,7 @@ const registerSubmit = () => {
           message.success('注册成功')
           currentAction.value = 'login'
           formState.phone = res.data?.username
-          formState.password = ''
+          // formState.password = ''
         } else {
           message.error(res.message)
         }
@@ -158,10 +159,7 @@ const registerSubmit = () => {
 </script>
 <template>
   <div class="login-wrapper">
-    <div class="title-wrapper">
-      <!-- <h1 class="title">铁路12306</h1>
-      <h3 class="desc">其他文案</h3> -->
-    </div>
+    <div class="title-wrapper"></div>
     <div class="login-reg-panel">
       <div class="login-info-box">
         <h2>已有账号？</h2>
@@ -194,7 +192,6 @@ const registerSubmit = () => {
             <FormItem v-if="usePasswd" v-bind="validateInfos.password">
               <InputPassword
                 size="large"
-                v-model:value="formState.password"
                 placeholder="密码"
               >
                 <template #prefix

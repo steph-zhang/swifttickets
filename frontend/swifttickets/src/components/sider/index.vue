@@ -16,7 +16,7 @@ const state = reactive({
 })
 const logout = () => {
   const token = Cookie.get('token')
-  fetchLogout({ accessToken: token }).then((res) => {
+  fetchLogout(token).then((res) => {
     if (res.success) {
       message.success('退出成功')
       location.href = 'login'

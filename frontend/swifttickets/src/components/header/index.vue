@@ -9,6 +9,7 @@
   } from 'ant-design-vue'
   import { useRouter, useRoute } from 'vue-router'
   import { defineProps, reactive, toRefs, watch } from 'vue'
+  import { fetchLogout } from '@/services'
 
   import Cookie from 'js-cookie'
   const username = Cookie.get('username')
@@ -37,7 +38,7 @@
   
   const logout = () => {
     const token = Cookie.get('token')
-    fetchLogout({ accessToken: token }).then((res) => {
+    fetchLogout(token).then((res) => {
       if (res.success) {
         message.success('退出成功')
         location.href = 'login'
@@ -59,15 +60,6 @@
             <router-link to="/ticketSearch">
               <li>首页</li>
             </router-link>
-            <a href="https://nageoffer.com/" target="_blank">
-              <li>文档</li>
-            </a>
-            <a href="https://nageoffer.com/pages/52d5c3/" target="_blank">
-              <li>博客</li>
-            </a>
-            <a href="https://nageoffer.com/pages/be7463/" target="_blank">
-              <li>社区</li>
-            </a>
             <a v-if="route.fullPath !== '/login'">
               <Dropdown :trigger="['click']">
                 <li :style="{ padding: '0 0 0 30px' }">

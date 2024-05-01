@@ -14,4 +14,6 @@ public interface UserLoginService extends IService<User> {
     Result sendCode(String phone, HttpSession session);
 
     Result info(String phone, HttpSession session);
+
+    Result logout(String token, HttpSession session);
 }
