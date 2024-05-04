@@ -5,7 +5,7 @@ spring:
     name: swifttickets
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.5.131:3306/swifttickets?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.5.131:3306/swifttickets?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     username: root
     password: '072149'
   redis:

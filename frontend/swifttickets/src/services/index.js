@@ -19,11 +19,11 @@ const fetchRegister = async (body) => {
   return data
 }
 
-const fetchTicketSearch = async (params) => {
+const fetchTicketSearch = async (body) => {
   const { data } = await http({
-    method: 'GET',
-    url: '/api/ticket-service/ticket/query',
-    params
+    method: 'POST',
+    url: '/api/ticketsearch/search',
+    data: body
   })
   return data
 }
@@ -111,7 +111,7 @@ const fetchPay = async (body) => {
 const fetchStationAll = async () => {
   const { data } = await http({
     method: 'GET',
-    url: '/api/ticket-service/station/all'
+    url: '/api/ticketsearch/searchAllStations'
   })
   return data
 }

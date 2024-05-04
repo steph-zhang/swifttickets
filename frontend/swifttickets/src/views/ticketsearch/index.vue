@@ -41,8 +41,8 @@ const carRangeTime = [
 ]
 
 const headSearch = reactive({
-  fromStation: 'BJP',
-  toStation: 'HZH',
+  fromStation: '',
+  toStation: '',
   departureDate: dayjs(),
   arrival_date: '',
   car_type: [],
@@ -455,8 +455,6 @@ const handSubmit = () => {
     fetchTicketSearch({
       fromStation,
       toStation,
-      departure: departure[0],
-      arrival: arrival[0],
       departureDate: departureDate.format('YYYY-MM-DD')
     }).then((res) => {
       if (!res.success) return message.error(res.message)
@@ -555,6 +553,7 @@ const handleBook = (record) => {
   )
 }
 </script>
+
 <template>
   <div>
     <Space direction="vertical" size="middle" :style="{ width: '100%' }">
