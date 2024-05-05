@@ -2,6 +2,9 @@ package com.stephzhang.swifttickets.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.stephzhang.swifttickets.dto.LoginFormDTO;
+import com.stephzhang.swifttickets.entity.Order;
+import com.stephzhang.swifttickets.entity.Route;
+import com.stephzhang.swifttickets.entity.Ticket;
 import com.stephzhang.swifttickets.entity.User;
 import com.stephzhang.swifttickets.utils.Result;
 
@@ -16,4 +19,8 @@ public interface UserLoginService extends IService<User> {
     Result info(String phone, HttpSession session);
 
     Result logout(String token, HttpSession session);
+
+    void generateTicket(Ticket ticket);
+
+    void generateOrder(Order order);
 }

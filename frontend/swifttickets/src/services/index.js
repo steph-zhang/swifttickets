@@ -6,7 +6,7 @@ const fetchLogin = async (body) => {
     url: '/api/userlogin/login',
     data: body
   })
-  http.defaults.headers.common['Authorization'] = data.data?.accessToken
+  http.defaults.headers.common['Authorization'] = data.data?.token
   return data
 }
 

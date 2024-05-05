@@ -30,8 +30,8 @@ public class TicketSearchController {
     }
 
     @PostMapping("/buyTicket")
-    public Result buyTicket(@RequestBody QueryTicketLeftForm queryTicketLeftForm){
-        return ticketSearchService.buyTicket(queryTicketLeftForm);
+    public Result buyTicket(@RequestBody QueryTicketLeftForm queryTicketLeftForm, HttpSession session){
+        return ticketSearchService.buyTicket(queryTicketLeftForm, session);
     }
 
     @GetMapping("/searchAllStations")

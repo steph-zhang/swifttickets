@@ -6,6 +6,8 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import com.stephzhang.swifttickets.dto.LoginFormDTO;
 import com.stephzhang.swifttickets.dto.LoginRespDTO;
+import com.stephzhang.swifttickets.entity.Order;
+import com.stephzhang.swifttickets.entity.Ticket;
 import com.stephzhang.swifttickets.entity.User;
 import com.stephzhang.swifttickets.mapper.UserMapper;
 import com.stephzhang.swifttickets.service.UserLoginService;
@@ -48,6 +50,7 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
         if(user == null){
             user = createUserWithPhone(phone);
         }
+        session.setAttribute("user", user);
         String token = UUID.randomUUID().toString(true);
         User userDTO = BeanUtil.copyProperties(user, User.class);
         Map<String, Object> userMap = BeanUtil.beanToMap(user, new HashMap<>(),
@@ -55,7 +58,7 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
                         .setIgnoreNullValue(true)
                         .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
         stringRedisTemplate.opsForHash().putAll("login:token:" + token, userMap);
-        stringRedisTemplate.expire("login:token:" + token, 1, TimeUnit.HOURS);
+        stringRedisTemplate.expire("login:token:" + token, 2, TimeUnit.HOURS);
         LoginRespDTO loginRespDTO = new LoginRespDTO();
         loginRespDTO.setUsername(user.getUsername());
         loginRespDTO.setPhone(user.getPhone());
@@ -71,7 +74,7 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
         }
         String code = RandomUtil.randomNumbers(6);
 
-        stringRedisTemplate.opsForValue().set("login:code:" + phone, code, 5, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set("login:code:" + phone, code, 30, TimeUnit.MINUTES);
 
         log.debug("验证码：{}", code);
 
@@ -88,6 +91,16 @@ public class UserLoginServiceImpl extends ServiceImpl<UserMapper, User> implemen
     public Result logout(String token, HttpSession session) {
         System.out.println(token);
         return Result.ok();
+    }
+
+    @Override
+    public void generateTicket(Ticket ticket) {
+
+    }
+
+    @Override
+    public void generateOrder(Order order) {
+
     }
 
     private User createUserWithPhone(String phone) {
