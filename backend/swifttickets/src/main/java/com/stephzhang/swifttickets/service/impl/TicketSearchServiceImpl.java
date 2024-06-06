@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stephzhang.swifttickets.dto.QueryTicketLeftForm;
 import com.stephzhang.swifttickets.dto.StationDTO;
 import com.stephzhang.swifttickets.dto.TicketSearchReq;
+import com.stephzhang.swifttickets.entity.Order;
 import com.stephzhang.swifttickets.entity.Route;
 import com.stephzhang.swifttickets.entity.User;
 import com.stephzhang.swifttickets.mapper.RouteMapper;
+import com.stephzhang.swifttickets.service.TicketBuyService;
 import com.stephzhang.swifttickets.service.TicketSearchService;
+import com.stephzhang.swifttickets.utils.ILock;
 import com.stephzhang.swifttickets.utils.Result;
+import com.stephzhang.swifttickets.utils.SimpleRedisLock;
 import com.stephzhang.swifttickets.utils.UserHolder;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -32,7 +37,11 @@ public class TicketSearchServiceImpl implements TicketSearchService {
     RouteMapper routeMapper;
 
     @Resource
+    TicketBuyService ticketBuyService;
+
+    @Resource
     StringRedisTemplate stringRedisTemplate;
+
 
     @Override
     public Result searchAllStations() {
@@ -98,17 +107,19 @@ public class TicketSearchServiceImpl implements TicketSearchService {
 //            System.out.println(atomic);
 //        }
         // 遍历原子路段列表，所有原子路段余票均大于0则代表有余票。
-        Map<Object, Object> entries = stringRedisTemplate.
+
+        synchronized (this){
+            Map<Object, Object> entries = stringRedisTemplate.
                 opsForHash().entries("ticket:" + qtl.getTrainname() + "_" + qtl.getDepartureDate());
-        for(Object field: entries.keySet()){
-//            System.out.println(entries.get(field));
-            if(Integer.parseInt(entries.get(field).toString()) <= 0) return Result.fail("没有余票");
+            for (Object field : entries.keySet()) {
+                if (Integer.parseInt(entries.get(field).toString()) <= 0) return Result.fail("没有余票");
+            }
+            for (Object field : entries.keySet()) {
+                stringRedisTemplate.opsForHash().
+                        increment("ticket:" + qtl.getTrainname() + "_" + qtl.getDepartureDate(), field, -1L);
+            }
         }
-        for(Object field: entries.keySet()){
-            stringRedisTemplate.opsForHash().
-                    increment("ticket:" + qtl.getTrainname() + "_" + qtl.getDepartureDate(),
-                            field, -1L);
-        }
+
         User user = UserHolder.get();
 
         return Result.ok("成功买票");
